@@ -1,0 +1,75 @@
+{
+    "name": "hacia.io",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "start": "webpack serve --mode development",
+        "build": "webpack --mode production",
+        "lint": "eslint 'src/**/*.{js,ts,tsx}'",
+        "style:check": "prettier --check 'src/**/*.{js,ts,tsx,json,css,scss}'",
+        "fix:lint": "eslint 'src/**/*.{js,ts,tsx}' --fix",
+        "fix:pretty": "prettier --write 'src/**/*.{js,ts,tsx,json,css,scss}'",
+        "prepare": "husky install",
+        "test": "jest",
+        "test:coverage": "jest --coverage",
+        "test:staged": "jest --bail --findRelatedTests",
+        "check:pre-commit": "npm run lint && npm run style:check",
+        "check:pre-push": "npm run test"
+    },
+    "dependencies": {
+        "@emotion/react": "11.13.3",
+        "@emotion/styled": "11.13.0",
+        "@mui/material": "6.1.1",
+        "@testing-library/jest-dom": "6.5.0",
+        "react": "18.3.1",
+        "react-dom": "18.3.1"
+    },
+    "devDependencies": {
+        "@babel/core": "7.25.2",
+        "@babel/preset-env": "7.25.4",
+        "@babel/preset-react": "7.24.7",
+        "@babel/preset-typescript": "7.24.7",
+        "@commitlint/cli": "^19.5.0",
+        "@commitlint/config-conventional": "^19.5.0",
+        "@testing-library/react": "16.0.1",
+        "@testing-library/user-event": "14.5.2",
+        "@types/react": "18.3.8",
+        "@types/react-dom": "18.3.0",
+        "@typescript-eslint/eslint-plugin": "8.6.0",
+        "@typescript-eslint/parser": "8.6.0",
+        "babel-jest": "29.7.0",
+        "babel-loader": "9.2.1",
+        "eslint": "8.57.1",
+        "eslint-config-airbnb": "19.0.4",
+        "eslint-config-prettier": "9.1.0",
+        "eslint-plugin-import": "2.30.0",
+        "eslint-plugin-jsx-a11y": "6.10.0",
+        "eslint-plugin-prettier": "5.2.1",
+        "eslint-plugin-react": "7.36.1",
+        "eslint-plugin-react-hooks": "4.6.2",
+        "husky": "^8.0.0",
+        "jest": "29.7.0",
+        "jest-environment-jsdom": "29.7.0",
+        "lint-staged": "15.2.10",
+        "prettier": "3.3.3",
+        "source-map-loader": "5.0.0",
+        "ts-jest": "29.2.5",
+        "typescript": "5.6.2",
+        "webpack": "5.94.0",
+        "webpack-cli": "5.1.4",
+        "webpack-dev-server": "5.1.0",
+        "webpack-node-externals": "3.0.0"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "npm run check:pre-commit",
+            "pre-push": "npm run check:pre-push"
+        }
+    },
+    "lint-staged": {
+        "src/**/*.{js,ts,tsx}": [
+            "eslint --fix",
+            "prettier --write"
+        ]
+    }
+}

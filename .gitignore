@@ -1,0 +1,69 @@
+# Node.js dependencies
+/node_modules
+
+# Build output
+/dist
+
+# Optional npm cache directory
+.npm
+
+# dotenv environment variables file
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Husky folder (optional, if you don't want to track hooks)
+.husky/_
+
+# IDE/Editor specific files
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# ESLint cache (optional)
+.eslintcache
+
+# Lint-staged debugging logs (optional)
+lint-staged.log
+
+# Mac-specific files (optional)
+.AppleDouble
+.LSOverride
+
+# Coverage directory used by testing tools like jest
+/coverage
+/nyc_output
+/jest-test-results.json
+/.jest
+
+# Compiled TypeScript files
+*.tsbuildinfo
+
+# Ignore lock files if you want to ensure you're always using the latest versions (optional)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Prettier config
+*.prettierignore
+
+# Test outputs and coverage
+/coverage
+
+# Ignore local husky folder if it generates hooks dynamically
+.husky/_
+
+# Ignore build artifacts
+/webpack-stats.json
+/.cache

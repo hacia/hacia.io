@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+      "target": "ES2017",                          // A good target that works well for modern environments
+      "lib": ["DOM", "DOM.Iterable", "ES2017"],    // Include DOM and ES features
+      "module": "ESNext",                          // Supports ES module resolution
+      "moduleResolution": "Node",                  // Node-style module resolution
+      "jsx": "react-jsx",                          // Enables the new JSX transform (React 17+)
+      "strict": true,                              // Enables strict type checking
+      "esModuleInterop": true,                     // Ensures compatibility with CommonJS modules
+      "skipLibCheck": true,                        // Skips type checking of declaration files for faster builds
+      "forceConsistentCasingInFileNames": true,    // Ensures file imports maintain case sensitivity
+      "declaration": true,                         // Generates `.d.ts` type declaration files
+      "declarationDir": "./dist/types",            // Where type declarations will be output
+      "outDir": "./dist",                          // Output directory for compiled files
+      "resolveJsonModule": true,                   // Allows importing JSON files
+      "isolatedModules": true                      // Ensures each file is treated as a separate module
+    },
+    "include": ["src/**/*"],                       // Include all files in src
+    "exclude": ["node_modules", "dist"]            // Exclude node_modules and dist directories
+  }
