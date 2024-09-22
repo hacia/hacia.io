@@ -1,88 +1,63 @@
+const path = require('path');
+const nodeExternals = require('webpack-node-externals');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin'); // Generates an HTML file for playground
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'); // HMR for React
+
+const isProduction = process.env.NODE_ENV === 'production';
+
 module.exports = {
-  parser: '@typescript-eslint/parser', // Specifies the ESLint parser for TypeScript
-  extends: [
-    'airbnb', // Airbnb's ESLint rules
-    'airbnb/hooks', // Airbnb's React Hooks rules
-    'plugin:@typescript-eslint/recommended', // TypeScript-specific rules
-    'plugin:react/recommended', // React-specific linting rules
-    'plugin:prettier/recommended', // Enable Prettier and display Prettier errors as ESLint errors
-    'plugin:jest/recommended', // Jest-specific linting rules for tests
-  ],
-  plugins: [
-    'react', // React specific linting rules
-    '@typescript-eslint', // TypeScript specific linting rules
-    'prettier', // Prettier plugin
-    'jest', // Jest plugin for linting test files
-    'import', // Import order linting
-    'jsx-a11y', // Accessibility plugin (optional)
-  ],
-  parserOptions: {
-    ecmaVersion: 2020, // Allows for the parsing of modern ECMAScript features
-    sourceType: 'module', // Allows for the use of imports
-    ecmaFeatures: {
-      jsx: true, // Enable JSX since we're using React
-    },
+  entry: {
+    lib: './src/index.ts', // Main component library entry point
+    playground: './playground/index.tsx', // Entry point for the playground app (for local dev)
   },
-  env: {
-    browser: true, // Browser global variables like `window` and `document`
-    es6: true, // Enables ES6 features
-    node: true, // Node.js global variables and Node.js scoping
-    'jest/globals': true, // Jest global variables for tests
+  mode: isProduction ? 'production' : 'development', // Switch mode based on env
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: isProduction ? '[name].min.js' : '[name].js', // Output different files for production/dev
+    library: 'Hacia.io', // Global library name
+    libraryTarget: 'umd', // Universal Module Definition for compatibility
+    globalObject: 'this',
+    clean: true, // Cleans the dist folder before each build
   },
-  settings: {
-    react: {
-      version: 'detect', // Automatically detect the version of React
-    },
-    'import/resolver': {
-      node: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx'], // Extensions ESLint should check for imports
-      },
-    },
-  },
-  rules: {
-    // React & JSX Rules
-    'react/jsx-filename-extension': [1, { extensions: ['.tsx'] }], // Allow JSX in TSX files
-    'react/prop-types': 'off', // Disable prop-types since we're using TypeScript for types
-
-    // TypeScript Rules
-    'import/extensions': 'off', // Disable import extensions requirement for TypeScript
-    '@typescript-eslint/no-unused-vars': ['warn'], // Warn on unused variables in TypeScript
-    'no-unused-vars': 'off', // Turn off ESLint's base rule in favor of TypeScript's
-    '@typescript-eslint/explicit-module-boundary-types': 'off', // Turn off explicit return types for all functions
-
-    // Prettier Rules
-    'prettier/prettier': 'error', // Show Prettier issues as errors
-
-    // Console warnings
-    'no-console': 'warn', // Warn about `console.log` but don’t error
-
-    // Allow require in certain files
-    'import/no-commonjs': 'off', // Allow require() globally (you can also scope it)
-
-    // Import Rules
-    'import/order': [
-      'error',
+  devtool: isProduction ? 'source-map' : 'eval-source-map', // Source maps for production and dev
+  externals: isProduction ? [nodeExternals()] : [], // Exclude external dependencies in production build
+  module: {
+    rules: [
       {
-        groups: [['builtin', 'external', 'internal']],
-        'newlines-between': 'always',
+        test: /\.(ts|tsx)$/,
+        exclude: /node_modules/,
+        use: 'ts-loader', // Transpile TypeScript files
+      },
+      {
+        enforce: 'pre',
+        test: /\.js$/,
+        loader: 'source-map-loader', // Load source maps for debugging
+        exclude: /node_modules/,
       },
     ],
-
-    // Jest Rules
-    'jest/no-disabled-tests': 'warn', // Warn about disabled tests (i.e., it.skip)
-    'jest/no-focused-tests': 'error', // Disallow focused tests (i.e., it.only)
-    'jest/no-identical-title': 'error', // Disallow identical test titles
-
-    // Accessibility (Optional, only if using jsx-a11y)
-    'jsx-a11y/anchor-is-valid': 'warn', // Warn if anchor tags are invalid
   },
-  overrides: [
-    {
-      // Override to allow require() in Webpack config and similar files
-      files: ['webpack.config.js', '**/*.config.js'],
-      rules: {
-        'import/no-commonjs': 'off', // Allow require() in config files
-      },
-    },
-  ],
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx'], // Resolves these file extensions
+  },
+  devServer: {
+    static: path.join(__dirname, 'playground'), // Serve from the playground folder in dev mode
+    compress: true,
+    port: 3000, // Use port 3000 for local development
+    hot: true, // Enable hot module replacement
+    open: true, // Automatically open the browser when running in dev mode
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './playground/index.html', // Generates an HTML file to use the playground
+      filename: 'index.html',
+    }),
+    new webpack.HotModuleReplacementPlugin(), // Hot Module Replacement plugin for better development experience
+    !isProduction && new ReactRefreshWebpackPlugin(), // Only use React Refresh in dev mode for HMR
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(
+        isProduction ? 'production' : 'development',
+      ),
+    }),
+  ].filter(Boolean), // Filter out falsy values to ensure plugins like ReactRefreshWebpackPlugin only load in dev
 };
